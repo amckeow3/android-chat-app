@@ -11,4 +11,6 @@
     <string name="existing_acct_txt">Already have an account?</string>
     <string name="first_name_txt">First Name</string>
     <string name="last_name_txt">Last Name</string>
+    <string name="logout_txt">Logout</string>
+    <string name="hello_txt">Hello,</string>
 </resources>

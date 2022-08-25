@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.project1_chatapp.databinding.FragmentLoginBinding;
 import com.example.project1_chatapp.databinding.FragmentRegistrationBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,15 +44,17 @@ public class RegistrationFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser user = mAuth.getCurrentUser();
-        String name = user.getDisplayName();
         String id = user.getUid();
         String email = user.getEmail();
+        String firstName = binding.editTextFirstName.getText().toString();
+        String lastName = binding.editTextLastName.getText().toString();
 
         HashMap<String, Object> newUser = new HashMap<>();
 
         newUser.put("id", id);
-        newUser.put("name", name);
         newUser.put("email", email);
+        newUser.put("firstName", firstName);
+        newUser.put("lastName", lastName);
 
         db.collection("users")
                 .document(id)
@@ -86,14 +87,14 @@ public class RegistrationFragment extends Fragment {
         binding.buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String fname = binding.editTextFirstName.getText().toString();
-                String lname = binding.editTextLastName.getText().toString();
+                String firstName = binding.editTextFirstName.getText().toString();
+                String lastName = binding.editTextLastName.getText().toString();
                 String email = binding.editTextRegistrationEmail.getText().toString();
                 String password = binding.editTextRegistrationPassword.getText().toString();
 
-                if (fname.isEmpty()){
+                if (firstName.isEmpty()){
                     Toast.makeText(getActivity().getApplicationContext(), "First name is required", Toast.LENGTH_SHORT).show();
-                } else if (lname.isEmpty()) {
+                } else if (lastName.isEmpty()) {
                     Toast.makeText(getActivity().getApplicationContext(), "Last name is required", Toast.LENGTH_SHORT).show();
                 } else if (email.isEmpty()) {
                     Toast.makeText(getActivity().getApplicationContext(), "Email is required", Toast.LENGTH_SHORT).show();
@@ -113,7 +114,7 @@ public class RegistrationFragment extends Fragment {
                                         Log.d(TAG, "onComplete: User " + user);
 
                                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                                .setDisplayName(fname + " " + lname)
+                                                .setDisplayName(firstName + " " + lastName)
                                                 .build();
 
                                         user.updateProfile(profileUpdates)
@@ -148,13 +149,20 @@ public class RegistrationFragment extends Fragment {
             }
         });
 
+        binding.textViewCancelRegistration.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.backToLogin();
+            }
+        });
+
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        getActivity().setTitle("Create Account");
     }
 
     @Override
@@ -166,6 +174,6 @@ public class RegistrationFragment extends Fragment {
 
     public interface RegistrationFragmentListener {
         void goToHomePage();
-        void goToLogin();
+        void backToLogin();
     }
 }

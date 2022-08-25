@@ -5,7 +5,8 @@ import android.os.Bundle;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.LoginFragmentListener, RegistrationFragment.RegistrationFragmentListener {
+public class MainActivity extends AppCompatActivity implements LoginFragment.LoginFragmentListener, RegistrationFragment.RegistrationFragmentListener,
+        HomeFragment.HomeFragmentListener {
 
     private FirebaseAuth mAuth;
 
@@ -18,13 +19,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
         FirebaseUser user = mAuth.getCurrentUser();
 
         if (user == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.rootView, new LoginFragment(), "login-fragment")
-                    .commit();
+            goToLogin();
         } else {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.rootView, new HomeFragment(), "home-fragment")
-                    .commit();
+            goToHomePage();
         }
     }
 
@@ -48,5 +45,10 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
                 .replace(R.id.rootView, new RegistrationFragment(), "registration-fragment")
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void backToLogin() {
+        getSupportFragmentManager().popBackStack();
     }
 }
