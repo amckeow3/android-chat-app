@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">Project1_ChatApp</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email_txt">Email</string>
+    <string name="pass_txt">Password</string>
+    <string name="login">Login</string>
+    <string name="create_new_acct">Register</string>
+    <string name="name_txt">Name</string>
+    <string name="register">Create Account</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_acct_txt">Don\'t have an account?</string>
+    <string name="existing_acct_txt">Already have an account?</string>
+    <string name="first_name_txt">First Name</string>
+    <string name="last_name_txt">Last Name</string>
 </resources>
