@@ -44,6 +44,8 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
+        getActivity().findViewById(R.id.toolbar).setVisibility(View.GONE);
+
         binding.buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +66,7 @@ public class LoginFragment extends Fragment {
                                         Log.d(TAG, "onComplete: Logged In Successfully");
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         Log.d(TAG, "onComplete: User " + user);
-                                        mListener.goToHomePage();
+                                        mListener.goToChatrooms();
                                     } else {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                         builder.setTitle("Login Error")
@@ -107,7 +109,7 @@ public class LoginFragment extends Fragment {
     }
 
     public interface LoginFragmentListener {
-        void goToHomePage();
+        void goToChatrooms();
         void goToRegistration();
     }
 }

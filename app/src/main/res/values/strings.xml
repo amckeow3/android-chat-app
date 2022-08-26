@@ -12,5 +12,10 @@
     <string name="first_name_txt">First Name</string>
     <string name="last_name_txt">Last Name</string>
     <string name="logout_txt">Logout</string>
-    <string name="hello_txt">Hello,</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="your_chatrooms_txt">Your Chatrooms</string>
+    <string name="all_chatrooms_txt">All Chatrooms</string>
 </resources>

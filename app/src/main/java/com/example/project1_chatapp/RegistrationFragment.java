@@ -84,6 +84,8 @@ public class RegistrationFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentRegistrationBinding.inflate(inflater, container, false);
 
+        getActivity().findViewById(R.id.toolbar).setVisibility(View.GONE);
+
         binding.buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,7 +130,7 @@ public class RegistrationFragment extends Fragment {
                                                         }
                                                     }
                                                 });
-                                        mListener.goToHomePage();
+                                        mListener.goToChatrooms();
                                     } else {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                         builder.setTitle("Registration  Error")
@@ -168,12 +170,11 @@ public class RegistrationFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
         mListener = (RegistrationFragment.RegistrationFragmentListener) context;
     }
 
     public interface RegistrationFragmentListener {
-        void goToHomePage();
+        void goToChatrooms();
         void backToLogin();
     }
 }

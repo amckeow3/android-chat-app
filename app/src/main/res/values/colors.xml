@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#0A4BF1</color>
     <color name="purple_primary">#C353FF</color>
+    <color name="toolbar_color">#EF5350</color>
 </resources>
