@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -15,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.project1_chatapp.databinding.ChatroomLineItemBinding;
 import com.example.project1_chatapp.databinding.FragmentChatroomBinding;
+import com.example.project1_chatapp.databinding.UserLineItemBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,18 +38,40 @@ public class ChatroomFragment extends Fragment {
     FragmentChatroomBinding binding;
     private FirebaseAuth mAuth;
     private TabLayout tabLayout;
-    private RecyclerView recyclerView;
     ArrayList<Chatroom> chatrooms = new ArrayList<>();
+    ChatroomsListAdapter chatroomsListAdapter;
+    LinearLayoutManager linearLayoutManager;
+    RecyclerView recyclerView;
 
    private void setupUI() {
         getActivity().findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
         getActivity().setTitle("Chatrooms");
         getUserAccountInfo();
 
-        tabLayout = binding.tabLayoutChatroomOptions;
-        recyclerView = binding.chatroomsRecyclerView;
+        binding.tabLayoutChatroomOptions.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Log.d(TAG, "onTabSelected: " + tab);
+                int mSelectedPosition = 0;
+                mSelectedPosition = tab.getPosition();
+                Log.d(TAG, "onTabSelected: Position ==>" + mSelectedPosition);
+                if (mSelectedPosition == 0) {
+                    Log.d(TAG, "onTabSelected: My Chatrooms Selected");
+                } else if (mSelectedPosition == 1) {
+                    getChatroomsData();
+                }
+            }
 
-        getChatroomsData();
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
     
     private void getUserAccountInfo() {
@@ -84,8 +109,61 @@ public class ChatroomFragment extends Fragment {
                             chatrooms.add(chatroom);
                         }
                         Log.d(TAG, "Chatrooms Array Items ---------> " + chatrooms);
+                        requireActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView = binding.chatroomsRecyclerView;
+                                recyclerView.setHasFixedSize(false);
+                                linearLayoutManager = new LinearLayoutManager(getContext());
+                                recyclerView.setLayoutManager(linearLayoutManager);
+                                chatroomsListAdapter = new ChatroomsListAdapter(chatrooms);
+                                recyclerView.setAdapter(chatroomsListAdapter);
+                            }
+                        });
                     }
                 });
+    }
+
+    class ChatroomsListAdapter extends RecyclerView.Adapter<ChatroomsListAdapter.ChatroomsViewHolder> {
+        ArrayList<Chatroom> mChatrooms;
+
+        public ChatroomsListAdapter(ArrayList<Chatroom> data) {
+            this.mChatrooms = data;
+        }
+
+        @NonNull
+        @Override
+        public ChatroomsListAdapter.ChatroomsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ChatroomLineItemBinding binding = ChatroomLineItemBinding.inflate(getLayoutInflater(), parent, false);
+            return new ChatroomsListAdapter.ChatroomsViewHolder(binding);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ChatroomsListAdapter.ChatroomsViewHolder holder, int position) {
+            Chatroom chatroom = mChatrooms.get(position);
+            holder.setupUI(chatroom);
+        }
+
+        @Override
+        public int getItemCount() {
+            return this.mChatrooms.size();
+        }
+
+        public class ChatroomsViewHolder extends RecyclerView.ViewHolder {
+            ChatroomLineItemBinding mBinding;
+            Chatroom mChatroom;
+            int position;
+
+            public ChatroomsViewHolder(@NonNull ChatroomLineItemBinding binding) {
+                super(binding.getRoot());
+                mBinding = binding;
+            }
+
+            public void setupUI(Chatroom chatroom) {
+                mChatroom = chatroom;
+                mBinding.textViewChatroomName.setText(mChatroom.getName());
+            }
+        }
     }
 
     public ChatroomFragment() {

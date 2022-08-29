@@ -26,11 +26,11 @@
                 android:id="@+id/imageViewAcctProfilePic"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
+                android:src="@drawable/ic_person"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/ic_person" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.cardview.widget.CardView>
         <androidx.constraintlayout.utils.widget.ImageFilterView
             android:id="@+id/buttonChangeProfilePicture"
