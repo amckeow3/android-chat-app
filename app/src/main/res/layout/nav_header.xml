@@ -2,7 +2,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="176dp"
-    android:background="@color/toolbar_color"
+    android:background="@color/primary"
     android:gravity="bottom"
     android:padding="16dp"
     android:orientation="vertical">

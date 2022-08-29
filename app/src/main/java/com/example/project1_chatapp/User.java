@@ -5,7 +5,21 @@ public class User {
     String firstName;
     String lastName;
     String email;
+    String city;
+    String gender;
 
+    public User() {
+
+    }
+
+    public User(String id, String firstName, String lastName, String email, String city, String gender) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.city = city;
+        this.gender = gender;
+    }
 
     public String getId() {
         return id;
@@ -39,6 +53,21 @@ public class User {
         this.email = email;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
     @Override
     public String toString() {
@@ -47,6 +76,8 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
+                ", city='" + city + '\'' +
+                ", gender='" + gender + '\'' +
                 '}';
     }
 }

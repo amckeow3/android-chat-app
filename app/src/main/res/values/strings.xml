@@ -18,4 +18,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_chatrooms_txt">Your Chatrooms</string>
     <string name="all_chatrooms_txt">All Chatrooms</string>
+    <string name="city_txt">City</string>
+    <string name="choose_gender_txt">Gender:</string>
+    <string name="female_txt">Female</string>
+    <string name="male_txt">Male</string>
+    <string name="save_txt">Save</string>
 </resources>

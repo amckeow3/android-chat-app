@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.project1_chatapp.databinding.FragmentRegistrationBinding;
@@ -34,6 +35,7 @@ public class RegistrationFragment extends Fragment {
     RegistrationFragment.RegistrationFragmentListener mListener;
     FragmentRegistrationBinding binding;
     private FirebaseAuth mAuth;
+    String selectedGender;
 
     public RegistrationFragment() {
         // Required empty public constructor
@@ -48,6 +50,14 @@ public class RegistrationFragment extends Fragment {
         String email = user.getEmail();
         String firstName = binding.editTextFirstName.getText().toString();
         String lastName = binding.editTextLastName.getText().toString();
+        String city = binding.editTextCity.getText().toString();
+        int checkedId = binding.radioGroupGender.getCheckedRadioButtonId();
+        String gender = "female";
+        if (checkedId == R.id.radioButtonFemale) {
+            gender = "female";
+        } else if (checkedId == R.id.radioButtonMale) {
+            gender = "male";
+        }
 
         HashMap<String, Object> newUser = new HashMap<>();
 
@@ -55,6 +65,8 @@ public class RegistrationFragment extends Fragment {
         newUser.put("email", email);
         newUser.put("firstName", firstName);
         newUser.put("lastName", lastName);
+        newUser.put("gender", gender);
+        newUser.put("city", city);
 
         db.collection("users")
                 .document(id)
@@ -63,6 +75,7 @@ public class RegistrationFragment extends Fragment {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.d(TAG, "New user was successfully added!");
+                        Log.d(TAG, "onSuccess: " + newUser);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

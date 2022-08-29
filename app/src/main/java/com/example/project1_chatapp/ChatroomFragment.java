@@ -38,7 +38,7 @@ public class ChatroomFragment extends Fragment {
     private RecyclerView recyclerView;
     ArrayList<Chatroom> chatrooms = new ArrayList<>();
 
-    public void setupUI() {
+   private void setupUI() {
         getActivity().findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
         getActivity().setTitle("Chatrooms");
         getUserAccountInfo();
@@ -49,7 +49,7 @@ public class ChatroomFragment extends Fragment {
         getChatroomsData();
     }
     
-    void getUserAccountInfo() {
+    private void getUserAccountInfo() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
