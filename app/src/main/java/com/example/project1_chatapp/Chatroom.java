@@ -1,6 +1,8 @@
 package com.example.project1_chatapp;
 
-public class Chatroom {
+import java.io.Serializable;
+
+public class Chatroom implements Serializable {
     String name;
     String id;
 

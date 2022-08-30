@@ -25,5 +25,5 @@
     <string name="save_txt">Save</string>
     <string name="join_txt">Join</string>
     <string name="chatroom_name_txt">Chatroom name</string>
-    <string name="submit_txt">Submit</string>
+    <string name="create_txt">Create</string>
 </resources>

@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.project1_chatapp.Chatroom;
 import com.example.project1_chatapp.databinding.ChatroomLineItemBinding;
 import com.example.project1_chatapp.databinding.FragmentChatroomBinding;
 import com.example.project1_chatapp.databinding.UserLineItemBinding;
@@ -39,6 +40,9 @@ public class ChatroomFragment extends Fragment {
     private FirebaseAuth mAuth;
     private TabLayout tabLayout;
     ArrayList<Chatroom> chatrooms = new ArrayList<>();
+    ArrayList<Chatroom> userChatrooms = new ArrayList<>();
+    ArrayList<String> allChatrooms = new ArrayList<>();
+    ArrayList<String> myChatrooms = new ArrayList<>();
     ChatroomsListAdapter chatroomsListAdapter;
     LinearLayoutManager linearLayoutManager;
     RecyclerView recyclerView;
@@ -56,7 +60,7 @@ public class ChatroomFragment extends Fragment {
                 mSelectedPosition = tab.getPosition();
                 Log.d(TAG, "onTabSelected: Position ==>" + mSelectedPosition);
                 if (mSelectedPosition == 0) {
-                    getMyChatroomData();
+                    getUserChatroomsData();
                 } else if (mSelectedPosition == 1) {
                     getAllChatroomsData();
                 }
@@ -130,8 +134,41 @@ public class ChatroomFragment extends Fragment {
                 });
     }
 
-    private void getMyChatroomData() {
-        Log.d(TAG, "getMyChatroomData: My Chatrooms tab selected");
+    private void getUserChatroomsData() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        String id = user.getUid();
+
+        db.collection("users")
+                .document(id)
+                .collection("chatrooms")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        userChatrooms.clear();
+                        Log.d(TAG, "user Chatrooms: " + value.getMetadata());
+                        for (QueryDocumentSnapshot document: value) {
+                            Chatroom chatroom = new Chatroom();
+                            chatroom.setId(document.getId());
+                            chatroom.setName(document.getString("name"));
+                            userChatrooms.add(chatroom);
+                        }
+                        Log.d(TAG, "User Chatrooms Array Items ---------> " + userChatrooms);
+                        requireActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView = binding.chatroomsRecyclerView;
+                                recyclerView.setHasFixedSize(false);
+                                linearLayoutManager = new LinearLayoutManager(getContext());
+                                recyclerView.setLayoutManager(linearLayoutManager);
+                                chatroomsListAdapter = new ChatroomsListAdapter(userChatrooms);
+                                recyclerView.setAdapter(chatroomsListAdapter);
+                            }
+                        });
+                    }
+                });
     }
 
     class ChatroomsListAdapter extends RecyclerView.Adapter<ChatroomsListAdapter.ChatroomsViewHolder> {
@@ -172,6 +209,23 @@ public class ChatroomFragment extends Fragment {
             public void setupUI(Chatroom chatroom) {
                 mChatroom = chatroom;
                 mBinding.textViewChatroomName.setText(mChatroom.getName());
+                Log.d(TAG, "chatrooms: " + chatrooms.toString());
+                Log.d(TAG, "userChatrooms: " + userChatrooms.toString());
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                mAuth = FirebaseAuth.getInstance();
+                FirebaseUser user = mAuth.getCurrentUser();
+                String id = user.getUid();
+
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Chatroom selectedChatroom = mChatroom;
+                        Log.d(TAG, "onClick: Selected Chatroom Id " + selectedChatroom);
+                        mListener.openSelectedChatroom(selectedChatroom);
+                    }
+                });
             }
         }
     }
@@ -192,7 +246,7 @@ public class ChatroomFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentChatroomBinding.inflate(inflater, container, false);
-        getMyChatroomData();
+        getUserChatroomsData();
         setupUI();
         return binding.getRoot();
     }
@@ -211,5 +265,6 @@ public class ChatroomFragment extends Fragment {
     public interface ChatroomFragmentListener {
         void goToLogin();
         void createNewChatroom();
+        void openSelectedChatroom(Chatroom chatroom);
     }
 }

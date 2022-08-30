@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.project1_chatapp.databinding.FragmentChatroomBinding;
 import com.example.project1_chatapp.databinding.FragmentCreateChatroomBinding;
@@ -62,6 +63,48 @@ public class CreateChatroomFragment extends Fragment {
                                         @Override
                                         public void onSuccess(DocumentReference documentReference) {
                                             Log.d(TAG, "onSuccess: " + documentReference.getId());
+                                            String chatroomId = documentReference.getId();
+                                            HashMap<String, Object> chatroomMember = new HashMap<>();
+                                            chatroomMember.put("name", user.getDisplayName());
+
+                                            HashMap<String, Object> userChatroom = new HashMap<>();
+                                            userChatroom.put("name", chatroomName);
+
+                                            db.collection("chatrooms")
+                                                    .document(chatroomId)
+                                                    .collection("members")
+                                                    .document(userId)
+                                                    .set(chatroomMember)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void unused) {
+                                                            Log.d(TAG, "New member added to chatroom");
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.d(TAG, "Error adding new chatroom member" + e);
+                                                        }
+                                                    });
+
+                                            db.collection("users")
+                                                    .document(userId)
+                                                    .collection("chatrooms")
+                                                    .document(chatroomId)
+                                                    .set(userChatroom)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void unused) {
+                                                            Log.d(TAG, "New member added to chatroom");
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.d(TAG, "Error adding new chatroom member" + e);
+                                                        }
+                                                    });
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -71,26 +114,9 @@ public class CreateChatroomFragment extends Fragment {
                                         }
                                     });
 
-                            db.collection("users")
-                                    .document(userId)
-                                    .collection("chatrooms")
-                                    .add(chatroom)
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                        @Override
-                                        public void onSuccess(DocumentReference documentReference) {
-                                            Log.d(TAG, "onSuccess: " + documentReference.getId());
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d(TAG, "Error adding new chatroom to user data" + e);
-                                        }
-                                    });
-
                             mListener.goToChatrooms();
                         } else {
-                            Log.d(TAG, "onComplete snap not null: Chatroom will this name already exists");
+                            Log.d(TAG, "onComplete snap not null: Chatroom wwith this name already exists");
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Create Chatroom Error")
                                     .setMessage("A chatroom will this name already exists!")
@@ -110,7 +136,13 @@ public class CreateChatroomFragment extends Fragment {
         binding.buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createChatroom();
+                String chatroomName = binding.editTextChatroomName.getText().toString();
+
+                if (chatroomName.trim().isEmpty()) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Chatroom name is required", Toast.LENGTH_SHORT).show();
+                } else {
+                    createChatroom();
+                }
             }
         });
     }

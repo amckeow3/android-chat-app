@@ -17,7 +17,8 @@
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/buttonSubmit"
@@ -29,7 +30,7 @@
         android:background="@drawable/rounded_corner"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
-        android:text="@string/submit_txt"
+        android:text="@string/create_txt"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="20sp"

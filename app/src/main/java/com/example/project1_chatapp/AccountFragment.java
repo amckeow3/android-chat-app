@@ -13,8 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.example.project1_chatapp.databinding.FragmentAccountBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,6 +26,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class AccountFragment extends Fragment {
@@ -32,12 +37,17 @@ public class AccountFragment extends Fragment {
 
     private void setupUI() {
         getUserAccountInfo();
+        binding.buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateUserProfile();
+            }
+        });
     }
 
     private void getUserAccountInfo() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
         FirebaseUser user = mAuth.getCurrentUser();
         String userUid = user.getUid();
 
@@ -51,11 +61,63 @@ public class AccountFragment extends Fragment {
                         String firstName = value.getString("firstName");
                         String lastName = value.getString("lastName");
                         String city = value.getString("city");
+                        String gender = value.getString("gender");
+
                         binding.editTextAcctFirstName.setText(firstName);
                         binding.editTextAcctLastName.setText(lastName);
-                        binding.editTextViewAcctCity.setText(city);
+                        binding.editTextAcctCity.setText(city);
+                        if (gender.matches("female")) {
+                            binding.radioButtonFemale.setChecked(true);
+                        } else if (gender.matches("male")) {
+                            binding.radioButtonMale.setChecked(true);
+                        }
+
+
                     }
                 });
+    }
+
+    private void updateUserProfile() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        String id = user.getUid();
+        String firstName = binding.editTextAcctFirstName.getText().toString();
+        String lastName = binding.editTextAcctLastName.getText().toString();
+        String city = binding.editTextAcctCity.getText().toString();
+        int checkedId = binding.radioGroupAcctGender.getCheckedRadioButtonId();
+        String gender = "female";
+        if (checkedId == R.id.radioButtonFemale) {
+            gender = "female";
+        } else if (checkedId == R.id.radioButtonMale) {
+            gender = "male";
+        }
+
+        HashMap<String, Object> updatedUser = new HashMap<>();
+
+        updatedUser.put("firstName", firstName);
+        updatedUser.put("lastName", lastName);
+        updatedUser.put("gender", gender);
+        updatedUser.put("city", city);
+
+        db.collection("users")
+                .document(id)
+                .set(updatedUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d(TAG, "User account was successfully updated!");
+                        Log.d(TAG, "onSuccess: " + updatedUser);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Error updating user account" + e);
+                    }
+                });
+
     }
 
     public AccountFragment() {

@@ -1,5 +1,7 @@
 package com.example.project1_chatapp;
 
+import java.util.ArrayList;
+
 public class User {
     String id;
     String firstName;
@@ -7,18 +9,20 @@ public class User {
     String email;
     String city;
     String gender;
+    ArrayList<Chatroom> userChatrooms = new ArrayList<>();
 
     public User() {
 
     }
 
-    public User(String id, String firstName, String lastName, String email, String city, String gender) {
+    public User(String id, String firstName, String lastName, String email, String city, String gender, ArrayList<Chatroom> userChatrooms) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.city = city;
         this.gender = gender;
+        this.userChatrooms = userChatrooms;
     }
 
     public String getId() {
@@ -69,6 +73,14 @@ public class User {
         this.gender = gender;
     }
 
+    public ArrayList<Chatroom> getUserChatrooms() {
+        return userChatrooms;
+    }
+
+    public void setUserChatrooms(ArrayList<Chatroom> userChatrooms) {
+        this.userChatrooms = userChatrooms;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -78,6 +90,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", city='" + city + '\'' +
                 ", gender='" + gender + '\'' +
+                ", userChatrooms=" + userChatrooms +
                 '}';
     }
 }

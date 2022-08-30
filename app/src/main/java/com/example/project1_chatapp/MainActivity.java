@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.LoginFragmentListener, RegistrationFragment.RegistrationFragmentListener,
         ChatroomFragment.ChatroomFragmentListener, AccountFragment.AccountFragmentListener, UsersFragment.UsersFragmentListener, NavigationView.OnNavigationItemSelectedListener,
-        CreateChatroomFragment.CreateChatroomFragmentListener {
+        CreateChatroomFragment.CreateChatroomFragmentListener, ViewChatroomFragment.ViewChatroomFragmentListener {
 
     private static final String TAG = "main activity";
     private FirebaseAuth mAuth;
@@ -120,6 +120,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
     public void createNewChatroom() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.rootView, new CreateChatroomFragment(), "create-chatroom-fragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void openSelectedChatroom(Chatroom chatroom) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.rootView, ViewChatroomFragment.newInstance(chatroom), "view-chatroom-fragment")
                 .addToBackStack(null)
                 .commit();
     }

@@ -107,13 +107,13 @@ public class RegistrationFragment extends Fragment {
                 String email = binding.editTextRegistrationEmail.getText().toString();
                 String password = binding.editTextRegistrationPassword.getText().toString();
 
-                if (firstName.isEmpty()){
+                if (firstName.trim().isEmpty()){
                     Toast.makeText(getActivity().getApplicationContext(), "First name is required", Toast.LENGTH_SHORT).show();
-                } else if (lastName.isEmpty()) {
+                } else if (lastName.trim().isEmpty()) {
                     Toast.makeText(getActivity().getApplicationContext(), "Last name is required", Toast.LENGTH_SHORT).show();
-                } else if (email.isEmpty()) {
+                } else if (email.trim().isEmpty()) {
                     Toast.makeText(getActivity().getApplicationContext(), "Email is required", Toast.LENGTH_SHORT).show();
-                } else if (password.isEmpty()) {
+                } else if (password.trim().isEmpty()) {
                     Toast.makeText(getActivity().getApplicationContext(), "Password is required", Toast.LENGTH_SHORT).show();
                 } else {
                     mAuth = FirebaseAuth.getInstance();
