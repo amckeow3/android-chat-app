@@ -23,4 +23,7 @@
     <string name="female_txt">Female</string>
     <string name="male_txt">Male</string>
     <string name="save_txt">Save</string>
+    <string name="join_txt">Join</string>
+    <string name="chatroom_name_txt">Chatroom name</string>
+    <string name="submit_txt">Submit</string>
 </resources>

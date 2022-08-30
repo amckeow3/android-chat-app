@@ -22,14 +22,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.LoginFragmentListener, RegistrationFragment.RegistrationFragmentListener,
-        ChatroomFragment.ChatroomFragmentListener, AccountFragment.AccountFragmentListener, UsersFragment.UsersFragmentListener, NavigationView.OnNavigationItemSelectedListener {
+        ChatroomFragment.ChatroomFragmentListener, AccountFragment.AccountFragmentListener, UsersFragment.UsersFragmentListener, NavigationView.OnNavigationItemSelectedListener,
+        CreateChatroomFragment.CreateChatroomFragmentListener {
 
     private static final String TAG = "main activity";
     private FirebaseAuth mAuth;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
-
     private ActionBarDrawerToggle toggle;
 
     @Override
@@ -113,6 +113,14 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
     public void goToLogin() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.rootView, new LoginFragment())
+                .commit();
+    }
+
+    @Override
+    public void createNewChatroom() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.rootView, new CreateChatroomFragment(), "create-chatroom-fragment")
+                .addToBackStack(null)
                 .commit();
     }
 

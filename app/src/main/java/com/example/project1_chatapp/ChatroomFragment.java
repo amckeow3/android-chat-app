@@ -52,13 +52,13 @@ public class ChatroomFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.d(TAG, "onTabSelected: " + tab);
-                int mSelectedPosition = 0;
+                int mSelectedPosition;
                 mSelectedPosition = tab.getPosition();
                 Log.d(TAG, "onTabSelected: Position ==>" + mSelectedPosition);
                 if (mSelectedPosition == 0) {
-                    Log.d(TAG, "onTabSelected: My Chatrooms Selected");
+                    getMyChatroomData();
                 } else if (mSelectedPosition == 1) {
-                    getChatroomsData();
+                    getAllChatroomsData();
                 }
             }
 
@@ -70,6 +70,13 @@ public class ChatroomFragment extends Fragment {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
+            }
+        });
+
+        binding.imageViewNewChatroom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.createNewChatroom();
             }
         });
     }
@@ -88,12 +95,11 @@ public class ChatroomFragment extends Fragment {
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                         Log.d(TAG, "user data ---->" + value.getData());
                         String name = value.getString("firstName") + " " + value.getString("lastName");
-                        binding.textViewHelloUserName.setText(name);
                     }
                 });
     }
 
-    private void getChatroomsData() {
+    private void getAllChatroomsData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("chatrooms")
@@ -122,6 +128,10 @@ public class ChatroomFragment extends Fragment {
                         });
                     }
                 });
+    }
+
+    private void getMyChatroomData() {
+        Log.d(TAG, "getMyChatroomData: My Chatrooms tab selected");
     }
 
     class ChatroomsListAdapter extends RecyclerView.Adapter<ChatroomsListAdapter.ChatroomsViewHolder> {
@@ -182,6 +192,7 @@ public class ChatroomFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentChatroomBinding.inflate(inflater, container, false);
+        getMyChatroomData();
         setupUI();
         return binding.getRoot();
     }
@@ -194,11 +205,11 @@ public class ChatroomFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
         mListener = (ChatroomFragment.ChatroomFragmentListener) context;
     }
 
     public interface ChatroomFragmentListener {
         void goToLogin();
+        void createNewChatroom();
     }
 }
