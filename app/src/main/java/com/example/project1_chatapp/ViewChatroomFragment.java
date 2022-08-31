@@ -6,16 +6,23 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.messaging.FirebaseMessaging;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.project1_chatapp.databinding.FragmentChatroomBinding;
 import com.example.project1_chatapp.databinding.FragmentViewChatroomBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ViewChatroomFragment extends Fragment {
@@ -29,6 +36,14 @@ public class ViewChatroomFragment extends Fragment {
     Chatroom chatroomObject;
     String chatroomName;
     String chatroomId;
+    Button leaveButton;
+    TextView chatroomTitle, numViewers;
+    EditText messageTextbox;
+    int viewerCount;
+    RecyclerView recyclerView;
+    LinearLayoutManager linearLayoutManager;
+    ViewChatroomRecyclerViewAdapter adapter;
+    ArrayList<Message> messageList;
 
     private void getMessages() {
         String topic = chatroomName;
@@ -91,6 +106,32 @@ public class ViewChatroomFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mListener = (ViewChatroomFragment.ViewChatroomFragmentListener) context;
+    }
+
+    class ViewChatroomRecyclerViewAdapter extends RecyclerView.Adapter<ViewChatroomRecyclerViewAdapter.ViewChatroomViewHolder> {
+
+        @NonNull
+        @Override
+        public ViewChatroomRecyclerViewAdapter.ViewChatroomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewChatroomRecyclerViewAdapter.ViewChatroomViewHolder holder, int position) {
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return 0;
+        }
+
+        class ViewChatroomViewHolder extends RecyclerView.ViewHolder {
+
+            public ViewChatroomViewHolder(@NonNull View itemView) {
+                super(itemView);
+            }
+        }
     }
 
     public interface ViewChatroomFragmentListener {
