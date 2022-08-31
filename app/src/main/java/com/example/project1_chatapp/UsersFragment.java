@@ -58,7 +58,7 @@ public class UsersFragment extends Fragment {
                             users.add(user);
                         }
                         Log.d(TAG, "Users Array Items ---------> " + users);
-                        requireActivity().runOnUiThread(new Runnable() {
+                        /*requireActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 recyclerView = binding.recyclerViewUsers;
@@ -68,7 +68,8 @@ public class UsersFragment extends Fragment {
                                 usersListAdapter = new UsersListAdapter(users);
                                 recyclerView.setAdapter(usersListAdapter);
                             }
-                        });
+                        });*/
+                        usersListAdapter.notifyDataSetChanged();
                     }
                 });
 
@@ -141,6 +142,13 @@ public class UsersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = binding.recyclerViewUsers;
+        recyclerView.setHasFixedSize(false);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        usersListAdapter = new UsersListAdapter(users);
+        recyclerView.setAdapter(usersListAdapter);
     }
 
     @Override

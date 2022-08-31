@@ -119,7 +119,7 @@ public class ChatroomFragment extends Fragment {
                             chatrooms.add(chatroom);
                         }
                         Log.d(TAG, "Chatrooms Array Items ---------> " + chatrooms);
-                        requireActivity().runOnUiThread(new Runnable() {
+                        /*requireActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 recyclerView = binding.chatroomsRecyclerView;
@@ -129,7 +129,8 @@ public class ChatroomFragment extends Fragment {
                                 chatroomsListAdapter = new ChatroomsListAdapter(chatrooms);
                                 recyclerView.setAdapter(chatroomsListAdapter);
                             }
-                        });
+                        });*/
+                        chatroomsListAdapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -147,16 +148,18 @@ public class ChatroomFragment extends Fragment {
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        userChatrooms.clear();
+                        //userChatrooms.clear();
+                        chatrooms.clear();
                         Log.d(TAG, "user Chatrooms: " + value.getMetadata());
                         for (QueryDocumentSnapshot document: value) {
                             Chatroom chatroom = new Chatroom();
                             chatroom.setId(document.getId());
                             chatroom.setName(document.getString("name"));
-                            userChatrooms.add(chatroom);
+                            //userChatrooms.add(chatroom);
+                            chatrooms.add(chatroom);
                         }
                         Log.d(TAG, "User Chatrooms Array Items ---------> " + userChatrooms);
-                        requireActivity().runOnUiThread(new Runnable() {
+                        /*requireActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 recyclerView = binding.chatroomsRecyclerView;
@@ -166,7 +169,8 @@ public class ChatroomFragment extends Fragment {
                                 chatroomsListAdapter = new ChatroomsListAdapter(userChatrooms);
                                 recyclerView.setAdapter(chatroomsListAdapter);
                             }
-                        });
+                        });*/
+                        chatroomsListAdapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -262,6 +266,13 @@ public class ChatroomFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = binding.chatroomsRecyclerView;
+        recyclerView.setHasFixedSize(false);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        chatroomsListAdapter = new ChatroomsListAdapter(chatrooms);
+        recyclerView.setAdapter(chatroomsListAdapter);
     }
 
     @Override

@@ -9,8 +9,8 @@
     <string name="cancel">Cancel</string>
     <string name="no_acct_txt">Don\'t have an account?</string>
     <string name="existing_acct_txt">Already have an account?</string>
-    <string name="first_name_txt">First Name</string>
-    <string name="last_name_txt">Last Name</string>
+    <string name="first_name_txt">First Name:</string>
+    <string name="last_name_txt">Last Name:</string>
     <string name="logout_txt">Logout</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -18,7 +18,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my_chatrooms_txt">My Chatrooms</string>
     <string name="all_chatrooms_txt">All Chatrooms</string>
-    <string name="city_txt">City</string>
+    <string name="city_txt">City:</string>
     <string name="choose_gender_txt">Gender:</string>
     <string name="female_txt">Female</string>
     <string name="male_txt">Male</string>
@@ -26,4 +26,6 @@
     <string name="join_txt">Join</string>
     <string name="chatroom_name_txt">Chatroom name</string>
     <string name="create_txt">Create</string>
+    <string name="back_txt">Back</string>
+    <string name="user_details_txt">User Details</string>
 </resources>

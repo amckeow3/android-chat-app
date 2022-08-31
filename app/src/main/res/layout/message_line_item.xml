@@ -47,48 +47,77 @@
                 android:id="@+id/textViewUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
                 android:text="TextView"
-                app:layout_constraintStart_toEndOf="@+id/imageViewAcctProfilePic"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/cardViewAcctProfilePic"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textViewChatMessage"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="14dp"
+                android:layout_marginEnd="8dp"
                 android:text="TextView"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/imageViewLikeButton"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/imageViewAcctProfilePic"
+                app:layout_constraintStart_toEndOf="@+id/cardViewAcctProfilePic"
                 app:layout_constraintTop_toBottomOf="@+id/textViewUserName" />
 
             <TextView
-                android:id="@+id/textViewChatDateTime"
+                android:id="@+id/textViewChatNumLikes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="13dp"
+                android:layout_marginBottom="17dp"
                 android:text="TextView"
+                android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageViewAcctProfilePic"
+                app:layout_constraintStart_toEndOf="@+id/cardViewAcctProfilePic"
                 app:layout_constraintTop_toBottomOf="@+id/textViewChatMessage"
-                app:layout_constraintVertical_bias="0.007" />
+                app:layout_constraintVertical_bias="1.0" />
 
-            <androidx.constraintlayout.utils.widget.ImageFilterView
-                android:id="@+id/imageViewAcctProfilePic"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="10dp"
-                android:src="@drawable/ic_person"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewAcctProfilePic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.012"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.utils.widget.ImageFilterView
+                    android:id="@+id/imageViewAcctProfilePic"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/ic_person"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="TextView"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageViewDeleteButton"
+                app:layout_constraintHorizontal_bias="0.005"
+                app:layout_constraintStart_toEndOf="@+id/textViewChatNumLikes" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
