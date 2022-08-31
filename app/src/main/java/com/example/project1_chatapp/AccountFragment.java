@@ -109,6 +109,7 @@ public class AccountFragment extends Fragment {
                     public void onSuccess(Void unused) {
                         Log.d(TAG, "User account was successfully updated!");
                         Log.d(TAG, "onSuccess: " + updatedUser);
+                        mListener.goToChatrooms();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -151,6 +152,6 @@ public class AccountFragment extends Fragment {
     }
 
     public interface AccountFragmentListener {
-        //void goToLogin();
+        void goToChatrooms();
     }
 }
