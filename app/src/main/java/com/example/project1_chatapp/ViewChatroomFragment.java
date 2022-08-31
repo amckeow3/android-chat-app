@@ -68,12 +68,12 @@ public class ViewChatroomFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser user = mAuth.getCurrentUser();
-        String userName = user.getDisplayName();
+        String creatorName = user.getDisplayName();
 
         HashMap<String, Object> message = new HashMap<>();
         String messageText = binding.editTextMessage.getText().toString();
         message.put("message", messageText);
-        message.put("creator", userName);
+        message.put("creator", creatorName);
         message.put("likes", 0);
         message.put("dateCreated", Timestamp.now());
 
