@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements LoginFragment.LoginFragmentListener, RegistrationFragment.RegistrationFragmentListener,
         ChatroomFragment.ChatroomFragmentListener, AccountFragment.AccountFragmentListener, UsersFragment.UsersFragmentListener, NavigationView.OnNavigationItemSelectedListener,
-        CreateChatroomFragment.CreateChatroomFragmentListener, ViewChatroomFragment.ViewChatroomFragmentListener {
+        CreateChatroomFragment.CreateChatroomFragmentListener, ViewChatroomFragment.ViewChatroomFragmentListener, UserDetailsFragment.UserDetailsFragmentListener {
 
     private static final String TAG = "main activity";
     private FirebaseAuth mAuth;
@@ -136,6 +136,19 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
     public void goToRegistration() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.rootView, new RegistrationFragment(), "registration-fragment")
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    public void backToUserList() {
+        getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void goToUserDetails(String userID) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.rootView, UserDetailsFragment.newInstance(userID), "user-details-fragment")
                 .addToBackStack(null)
                 .commit();
     }

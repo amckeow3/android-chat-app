@@ -1,5 +1,6 @@
 package com.example.project1_chatapp;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,7 +14,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -81,5 +85,44 @@ public class UserDetailsFragment extends Fragment {
         userGender = view.findViewById(R.id.textViewUserDetailsGender);
 
         backButton = view.findViewById(R.id.buttonUserDetailsBack);
+
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
+
+        database.collection("users")
+                .document(userID)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        String firstName = value.getString("firstName");
+                        String lastName = value.getString("lastName");
+                        String city = value.getString("city");
+                        String gender = value.getString("gender");
+
+                        userFirstName.setText(firstName);
+                        userLastName.setText(lastName);
+                        userCity.setText(city);
+                        userGender.setText(gender);
+                    }
+                });
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.backToUserList();
+            }
+        });
+    }
+
+    UserDetailsFragmentListener mListener;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mListener = (UserDetailsFragmentListener) context;
+    }
+
+    interface UserDetailsFragmentListener {
+        void backToUserList();
     }
 }

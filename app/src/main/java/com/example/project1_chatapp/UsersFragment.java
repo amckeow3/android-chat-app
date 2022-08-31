@@ -117,6 +117,15 @@ public class UsersFragment extends Fragment {
                 mBinding.textViewUserFullName.setText(firstName + " " + lastName);
                 mBinding.textViewUserCity.setText(mUser.getCity());
                 mBinding.textViewUserGender.setText(mUser.getGender());
+
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String uid = mUser.id;
+
+                        mListener.goToUserDetails(uid);
+                    }
+                });
             }
         }
     }
@@ -160,5 +169,6 @@ public class UsersFragment extends Fragment {
 
     public interface UsersFragmentListener {
         //void goToLogin();
+        void goToUserDetails(String userID);
     }
 }
