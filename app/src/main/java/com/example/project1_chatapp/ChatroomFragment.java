@@ -41,7 +41,7 @@ public class ChatroomFragment extends Fragment {
     private TabLayout tabLayout;
     ArrayList<Chatroom> chatrooms = new ArrayList<>();
     ArrayList<Chatroom> userChatrooms = new ArrayList<>();
-    ArrayList<String> allChatrooms = new ArrayList<>();
+    ArrayList<User> membersList = new ArrayList<>();
     ArrayList<String> myChatrooms = new ArrayList<>();
     ChatroomsListAdapter chatroomsListAdapter;
     LinearLayoutManager linearLayoutManager;
@@ -111,11 +111,21 @@ public class ChatroomFragment extends Fragment {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         chatrooms.clear();
-                        Log.d(TAG, "Chatrooms Info: " + value.getMetadata());
+                        membersList.clear();
+
                         for (QueryDocumentSnapshot document: value) {
+                            Log.d(TAG, "Chatroom Info: " + document);
+                            mAuth = FirebaseAuth.getInstance();
                             Chatroom chatroom = new Chatroom();
                             chatroom.setId(document.getId());
                             chatroom.setName(document.getString("name"));
+                            ArrayList<User> members = document.toObject(Chatroom.class).members;
+                            for (User user : members) {
+                                membersList.add(user);
+                            }
+                            Log.d(TAG, "MEMBERS ARRAY LIST" + membersList);
+                            chatroom.members.addAll(membersList);
+                            Log.d(TAG, "Members added ************* " + chatroom.members);
                             chatrooms.add(chatroom);
                         }
                         Log.d(TAG, "Chatrooms Array Items ---------> " + chatrooms);
@@ -155,8 +165,13 @@ public class ChatroomFragment extends Fragment {
                             Chatroom chatroom = new Chatroom();
                             chatroom.setId(document.getId());
                             chatroom.setName(document.getString("name"));
+<<<<<<< Updated upstream
                             //userChatrooms.add(chatroom);
                             chatrooms.add(chatroom);
+=======
+
+                            userChatrooms.add(chatroom);
+>>>>>>> Stashed changes
                         }
                         Log.d(TAG, "User Chatrooms Array Items ---------> " + userChatrooms);
                         /*requireActivity().runOnUiThread(new Runnable() {

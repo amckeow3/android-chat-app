@@ -6,9 +6,23 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+<<<<<<< Updated upstream
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+=======
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+>>>>>>> Stashed changes
 import com.google.firebase.messaging.FirebaseMessaging;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +36,11 @@ import com.example.project1_chatapp.databinding.FragmentChatroomBinding;
 import com.example.project1_chatapp.databinding.FragmentViewChatroomBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
+<<<<<<< Updated upstream
 import java.util.ArrayList;
+=======
+import java.util.Date;
+>>>>>>> Stashed changes
 import java.util.HashMap;
 
 public class ViewChatroomFragment extends Fragment {
@@ -45,25 +63,48 @@ public class ViewChatroomFragment extends Fragment {
     ViewChatroomRecyclerViewAdapter adapter;
     ArrayList<Message> messageList;
 
-    private void getMessages() {
-        String topic = chatroomName;
-
-        HashMap<String, Object> newMessage = new HashMap<>();
-        /*
-        Message message = Message.builder()
-                .putData("score", "850")
-                .putData("time", "2:45")
-                .setTopic(topic)
-                .build();
-         */
-};
-
-// Send a message to devices subscribed to the provided topic.
-
-
     private void setupUI() {
-        Log.d(TAG, "onCreateView: " + chatroomName + chatroomId);
         getActivity().setTitle(chatroomName);
+
+        binding.buttonSendMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessage();
+                binding.editTextMessage.setText("");
+            }
+        });
+    }
+
+    private void sendMessage() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        String userId = user.getUid();
+
+        HashMap<String, Object> message = new HashMap<>();
+        String messageText = binding.editTextMessage.getText().toString();
+        message.put("message", messageText);
+        message.put("creator", userId);
+        message.put("dateCreated", Timestamp.now());
+
+        db.collection("chatrooms")
+                .document(chatroomId)
+                .collection("messages")
+                .add(message)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "Message was successfully sent!");
+                        Log.d(TAG, "onSuccess: " + message);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Message send failed" + e);
+                    }
+                });
     }
 
     public ViewChatroomFragment() {
@@ -86,7 +127,6 @@ public class ViewChatroomFragment extends Fragment {
             chatroomId = chatroomObject.getId();
             chatroomName = chatroomObject.getName();
         }
-        getMessages();
     }
 
     @Override

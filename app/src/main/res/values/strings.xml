@@ -26,7 +26,11 @@
     <string name="join_txt">Join</string>
     <string name="chatroom_name_txt">Chatroom name</string>
     <string name="create_txt">Create</string>
+<<<<<<< Updated upstream
     <string name="back_txt">Back</string>
     <string name="user_details_txt">User Details</string>
     <string name="leave_txt">Leave</string>
+=======
+    <string name="write_msg_txt">Write your message</string>
+>>>>>>> Stashed changes
 </resources>
