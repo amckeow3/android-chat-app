@@ -217,8 +217,7 @@ public class ChatroomFragment extends Fragment {
                 FirebaseUser user = mAuth.getCurrentUser();
                 String id = user.getUid();
 
-
-                itemView.setOnClickListener(new View.OnClickListener() {
+                mBinding.buttonJoin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Chatroom selectedChatroom = mChatroom;
@@ -226,6 +225,15 @@ public class ChatroomFragment extends Fragment {
                         mListener.openSelectedChatroom(selectedChatroom);
                     }
                 });
+
+                /*itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Chatroom selectedChatroom = mChatroom;
+                        Log.d(TAG, "onClick: Selected Chatroom Id " + selectedChatroom);
+                        mListener.openSelectedChatroom(selectedChatroom);
+                    }
+                });*/
             }
         }
     }
