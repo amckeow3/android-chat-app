@@ -1,61 +1,62 @@
 package com.example.project1_chatapp;
 
-<<<<<<< Updated upstream
-public class Message {
-    String messageText;
-    String messageDate;
-    String posterName;
-    //profile image of poster
-    int numLikes;
-=======
-import java.util.Date;
-
 public class Message {
     String id;
     String messageText;
+    String dateCreated;
     String creator;
-    Date dateCreated;
+    int numLikes;
 
     public Message() {
 
     }
 
-    public Message(String messageText, String creator, Date dateCreated) {
+    public Message(String id, String messageText, String dateCreated, String creator, int numLikes) {
+        this.id = id;
         this.messageText = messageText;
-        this.creator = creator;
         this.dateCreated = dateCreated;
-    }
-
-    public String getMessageText() {
-        return messageText;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
-    }
-
-    public void setCreator(String creator) {
         this.creator = creator;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
+        this.numLikes = numLikes;
     }
 
     public String getId() {
         return id;
     }
 
+    public String getMessageText() {
+        return messageText;
+    }
+
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public int getNumLikes() {
+        return numLikes;
+    }
+
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setMessageText(String messageText) {
+        this.messageText = messageText;
+    }
+
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public void setNumLikes(int numLikes) {
+        this.numLikes = numLikes;
     }
 
     @Override
@@ -63,9 +64,9 @@ public class Message {
         return "Message{" +
                 "id='" + id + '\'' +
                 ", messageText='" + messageText + '\'' +
+                ", dateCreated='" + dateCreated + '\'' +
                 ", creator='" + creator + '\'' +
-                ", dateCreated=" + dateCreated +
+                ", numLikes=" + numLikes +
                 '}';
     }
->>>>>>> Stashed changes
 }

@@ -1,17 +1,11 @@
 package com.example.project1_chatapp;
-
 import android.content.Context;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-<<<<<<< Updated upstream
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-=======
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,7 +16,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
->>>>>>> Stashed changes
 import com.google.firebase.messaging.FirebaseMessaging;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,16 +24,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.example.project1_chatapp.databinding.FragmentChatroomBinding;
 import com.example.project1_chatapp.databinding.FragmentViewChatroomBinding;
 import com.google.firebase.auth.FirebaseAuth;
-
-<<<<<<< Updated upstream
 import java.util.ArrayList;
-=======
 import java.util.Date;
->>>>>>> Stashed changes
 import java.util.HashMap;
 
 public class ViewChatroomFragment extends Fragment {
@@ -80,12 +68,13 @@ public class ViewChatroomFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser user = mAuth.getCurrentUser();
-        String userId = user.getUid();
+        String userName = user.getDisplayName();
 
         HashMap<String, Object> message = new HashMap<>();
         String messageText = binding.editTextMessage.getText().toString();
         message.put("message", messageText);
-        message.put("creator", userId);
+        message.put("creator", userName);
+        message.put("likes", 0);
         message.put("dateCreated", Timestamp.now());
 
         db.collection("chatrooms")

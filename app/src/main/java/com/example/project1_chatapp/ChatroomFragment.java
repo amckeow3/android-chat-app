@@ -165,13 +165,10 @@ public class ChatroomFragment extends Fragment {
                             Chatroom chatroom = new Chatroom();
                             chatroom.setId(document.getId());
                             chatroom.setName(document.getString("name"));
-<<<<<<< Updated upstream
                             //userChatrooms.add(chatroom);
                             chatrooms.add(chatroom);
-=======
 
                             userChatrooms.add(chatroom);
->>>>>>> Stashed changes
                         }
                         Log.d(TAG, "User Chatrooms Array Items ---------> " + userChatrooms);
                         /*requireActivity().runOnUiThread(new Runnable() {
@@ -236,7 +233,8 @@ public class ChatroomFragment extends Fragment {
                 FirebaseUser user = mAuth.getCurrentUser();
                 String id = user.getUid();
 
-                mBinding.buttonJoin.setOnClickListener(new View.OnClickListener() {
+
+                itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Chatroom selectedChatroom = mChatroom;
@@ -244,15 +242,6 @@ public class ChatroomFragment extends Fragment {
                         mListener.openSelectedChatroom(selectedChatroom);
                     }
                 });
-
-                /*itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Chatroom selectedChatroom = mChatroom;
-                        Log.d(TAG, "onClick: Selected Chatroom Id " + selectedChatroom);
-                        mListener.openSelectedChatroom(selectedChatroom);
-                    }
-                });*/
             }
         }
     }

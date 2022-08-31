@@ -19,11 +19,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class UserDetailsFragment extends Fragment {
 
     private FirebaseAuth mAuth;
@@ -40,14 +35,7 @@ public class UserDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param user The user ID.
-     * @return A new instance of fragment UserDetailsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static UserDetailsFragment newInstance(String user) {
         UserDetailsFragment fragment = new UserDetailsFragment();
         Bundle args = new Bundle();
