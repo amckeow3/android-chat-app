@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.project1_chatapp.Chatroom;
 import com.example.project1_chatapp.databinding.ChatroomLineItemBinding;
@@ -233,8 +234,9 @@ public class ChatroomFragment extends Fragment {
                 FirebaseUser user = mAuth.getCurrentUser();
                 String id = user.getUid();
 
+                Button joinButton = itemView.findViewById(R.id.buttonJoin);
 
-                itemView.setOnClickListener(new View.OnClickListener() {
+                joinButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Chatroom selectedChatroom = mChatroom;
@@ -242,6 +244,16 @@ public class ChatroomFragment extends Fragment {
                         mListener.openSelectedChatroom(selectedChatroom);
                     }
                 });
+
+
+                /*itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Chatroom selectedChatroom = mChatroom;
+                        Log.d(TAG, "onClick: Selected Chatroom Id " + selectedChatroom);
+                        mListener.openSelectedChatroom(selectedChatroom);
+                    }
+                });*/
             }
         }
     }

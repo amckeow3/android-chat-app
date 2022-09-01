@@ -23,10 +23,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.project1_chatapp.databinding.FragmentChatroomBinding;
 import com.example.project1_chatapp.databinding.FragmentViewChatroomBinding;
 import com.google.firebase.auth.FirebaseAuth;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -129,6 +134,13 @@ public class ViewChatroomFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = binding.messagesRecyclerView;
+        recyclerView.setHasFixedSize(false);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new ViewChatroomRecyclerViewAdapter(messageList);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -138,27 +150,63 @@ public class ViewChatroomFragment extends Fragment {
     }
 
     class ViewChatroomRecyclerViewAdapter extends RecyclerView.Adapter<ViewChatroomRecyclerViewAdapter.ViewChatroomViewHolder> {
+        ArrayList<Message> messageArrayList;
+
+        public ViewChatroomRecyclerViewAdapter(ArrayList<Message> messages) {
+            this.messageArrayList = messages;
+        }
 
         @NonNull
         @Override
         public ViewChatroomRecyclerViewAdapter.ViewChatroomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return null;
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_line_item, parent, false);
+            ViewChatroomViewHolder viewChatroomViewHolder = new ViewChatroomRecyclerViewAdapter.ViewChatroomViewHolder(view);
+
+            return viewChatroomViewHolder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewChatroomRecyclerViewAdapter.ViewChatroomViewHolder holder, int position) {
+            if(messageArrayList.size() != 0) {
+                Message message = messageArrayList.get(position);
+                holder.messageTextview.setText(message.getMessageText());
+                holder.posterName.setText(message.getCreator());
+                holder.postDate.setText(message.getDateCreated());
+                holder.numLikes.setText(message.getNumLikes());
 
+                //adds delete button to user's posted comments only
+                FirebaseUser user = mAuth.getCurrentUser();
+                String id = user.getUid();
+
+                if(message.getCreatorID().equals(id)){
+                    holder.deleteButton.setClickable(true);
+                    holder.deleteButton.setVisibility(View.VISIBLE);
+                } else {
+                    holder.deleteButton.setClickable(false);
+                    holder.deleteButton.setVisibility(View.INVISIBLE);
+                }
+            }
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return messageArrayList.size();
         }
 
         class ViewChatroomViewHolder extends RecyclerView.ViewHolder {
+            TextView posterName, postDate, numLikes, messageTextview;
+            ImageView deleteButton, likeButton;
 
             public ViewChatroomViewHolder(@NonNull View itemView) {
                 super(itemView);
+                posterName = itemView.findViewById(R.id.textViewUserName);
+                postDate = itemView.findViewById(R.id.textViewPostDate);
+                numLikes = itemView.findViewById(R.id.textViewChatNumLikes);
+                messageTextview = itemView.findViewById(R.id.textViewChatMessage);
+                deleteButton = itemView.findViewById(R.id.imageViewDeleteButton);
+                likeButton = itemView.findViewById(R.id.imageViewLikeButton);
+
+                
             }
         }
     }

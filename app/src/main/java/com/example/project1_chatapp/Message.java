@@ -5,6 +5,7 @@ public class Message {
     String messageText;
     String dateCreated;
     String creator;
+    String creatorID;
     int numLikes;
 
     public Message() {
@@ -33,6 +34,14 @@ public class Message {
 
     public String getCreator() {
         return creator;
+    }
+
+    public String getCreatorID() {
+        return creatorID;
+    }
+
+    public void setCreatorID(String creatorID) {
+        this.creatorID = creatorID;
     }
 
     public int getNumLikes() {
