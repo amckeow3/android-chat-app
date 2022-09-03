@@ -1,72 +1,77 @@
 package com.example.project1_chatapp;
 
+import com.google.firebase.Timestamp;
+
+import java.util.Date;
+
 public class Message {
-    String id;
-    String messageText;
-    String dateCreated;
-    String creator;
-    int numLikes;
+    public String id,  message, creator, creatorID;
+    public Timestamp dateCreated;
+    public int likes;
 
     public Message() {
-
+        this.id = "00000";
+        this.message = "message";
+        this.creator = "creator";
+        this.likes = 0;
     }
 
-    public Message(String id, String messageText, String dateCreated, String creator, int numLikes) {
-        this.id = id;
-        this.messageText = messageText;
+    public Timestamp getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Timestamp dateCreated) {
         this.dateCreated = dateCreated;
-        this.creator = creator;
-        this.numLikes = numLikes;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getMessageText() {
-        return messageText;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
+    public String getMessage() {
+        return message;
     }
 
     public String getCreator() {
         return creator;
     }
 
-    public int getNumLikes() {
-        return numLikes;
+    public String getCreatorID() {
+        return creatorID;
+    }
+
+    public void setCreatorID(String creatorID) {
+        this.creatorID = creatorID;
+    }
+
+    public int getLikes() {
+        return likes;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setMessageText(String messageText) {
-        this.messageText = messageText;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
+    public void setMessage(String messageText) {
+        this.message = messageText;
     }
 
     public void setCreator(String creator) {
         this.creator = creator;
     }
 
-    public void setNumLikes(int numLikes) {
-        this.numLikes = numLikes;
+    public void setLikes(int numLikes) {
+        this.likes = numLikes;
     }
 
     @Override
     public String toString() {
         return "Message{" +
                 "id='" + id + '\'' +
-                ", messageText='" + messageText + '\'' +
+                ", messageText='" + message + '\'' +
                 ", dateCreated='" + dateCreated + '\'' +
                 ", creator='" + creator + '\'' +
-                ", numLikes=" + numLikes +
+                ", numLikes=" + likes +
                 '}';
     }
 }
