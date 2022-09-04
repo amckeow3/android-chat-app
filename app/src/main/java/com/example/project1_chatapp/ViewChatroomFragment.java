@@ -20,6 +20,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -60,7 +61,6 @@ public class ViewChatroomFragment extends Fragment {
     Button leaveButton;
     FloatingActionButton sendButton;
     TextView chatroomTitle, numViewers;
-    EditText messageTextbox;
     int viewerCount;
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
@@ -173,6 +173,7 @@ public class ViewChatroomFragment extends Fragment {
                         }
                     });
 
+                    binding.editTextMessage.setText("");
 
                 }
             }
@@ -182,6 +183,7 @@ public class ViewChatroomFragment extends Fragment {
     void getMessages() {
         db.collection("chatrooms").document(chatroomId)
                 .collection("messages")
+                .orderBy("dateCreated", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -225,6 +227,7 @@ public class ViewChatroomFragment extends Fragment {
                 Message message = messageArrayList.get(position);
                 holder.messageTextview.setText(message.getMessage());
                 holder.posterName.setText(message.getCreator());
+                holder.messageID = message.getId();
 
                 if(message.getDateCreated() != null){
                     SimpleDateFormat sdf = new SimpleDateFormat();
@@ -238,7 +241,7 @@ public class ViewChatroomFragment extends Fragment {
                 holder.numLikes.setText(Integer.toString(message.getLikes()));
 
                 //adds delete button to user's posted comments only
-                /*FirebaseUser user = mAuth.getCurrentUser();
+                FirebaseUser user = mAuth.getCurrentUser();
                 String id = user.getUid();
 
                 if(message.getCreatorID().equals(id)){
@@ -247,7 +250,7 @@ public class ViewChatroomFragment extends Fragment {
                 } else {
                     holder.deleteButton.setClickable(false);
                     holder.deleteButton.setVisibility(View.INVISIBLE);
-                }*/
+                }
             }
         }
 
@@ -259,6 +262,7 @@ public class ViewChatroomFragment extends Fragment {
         class ViewChatroomViewHolder extends RecyclerView.ViewHolder {
             TextView posterName, postDate, numLikes, messageTextview;
             ImageView deleteButton, likeButton;
+            String messageID;
 
             public ViewChatroomViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -269,7 +273,35 @@ public class ViewChatroomFragment extends Fragment {
                 deleteButton = itemView.findViewById(R.id.imageViewDeleteButton);
                 likeButton = itemView.findViewById(R.id.imageViewLikeButton);
 
-                
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        db.collection("chatrooms").document(chatroomId)
+                                .collection("messages").document(messageID)
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(getActivity(), "Message successfully deleted!", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+                                        b.setTitle("Error deleting message")
+                                                .setMessage(e.getMessage())
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                    }
+                                                });
+                                        b.create().show();
+                                    }
+                                });
+                    }
+                });
             }
         }
     }

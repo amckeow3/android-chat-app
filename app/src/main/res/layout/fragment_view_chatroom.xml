@@ -55,7 +55,7 @@
         app:layout_constraintBottom_toTopOf="@+id/divider3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/message_line_item" />
 
 
