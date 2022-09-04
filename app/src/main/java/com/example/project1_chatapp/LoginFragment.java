@@ -4,16 +4,16 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.example.project1_chatapp.databinding.FragmentLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -96,14 +96,42 @@ public class LoginFragment extends Fragment {
         binding.textViewPassReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //mListener.goToRegistration();
-                mAuth.sendPasswordResetEmail(mAuth.getCurrentUser().getEmail())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
+                EditText passwordBox = new EditText(getActivity());
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Password Reset")
+                        .setMessage("Please enter your email below")
+                        .setView(passwordBox)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Log.d("qq", "onClick: Ok clicked");
+                                String email = passwordBox.getText().toString();
+                                Log.d("qq", "entered email: " + email);
+
+                                mAuth.sendPasswordResetEmail(email)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    Toast.makeText(getActivity(), "Email sent!", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                    builder.setTitle("Error")
+                                                            .setMessage(task.getException().getMessage())
+                                                            .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                                                @Override
+                                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                                    Log.d(TAG, "onClick: Ok clicked");
+                                                                }
+                                                            });
+                                                    builder.create().show();
+                                                }
+                                            }
+                                        });
                             }
                         });
+                builder.create().show();
             }
         });
 

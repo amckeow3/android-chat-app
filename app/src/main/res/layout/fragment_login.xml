@@ -92,11 +92,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="TextView"
+        android:text="@string/password_reset_txt"
         android:textColor="@color/blue"
         android:textSize="19sp"
         app:layout_constraintStart_toEndOf="@+id/textViewforgotPW"
-        app:layout_constraintTop_toTopOf="@+id/textViewforgotPW"
-        app:layout_constraintTop_toBottomOf="@+id/textViewforgotPW" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewforgotPW"
+        app:layout_constraintTop_toTopOf="@+id/textViewforgotPW" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
