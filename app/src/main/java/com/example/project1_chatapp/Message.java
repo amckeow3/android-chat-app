@@ -2,18 +2,30 @@ package com.example.project1_chatapp;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Message {
     public String id,  message, creator, creatorID;
     public Timestamp dateCreated;
-    public int likes;
+    public ArrayList<String> likes;
 
     public Message() {
         this.id = "00000";
         this.message = "message";
         this.creator = "creator";
-        this.likes = 0;
+        this.creatorID = "id00000";
+        this.dateCreated = Timestamp.now();
+        this.likes = new ArrayList<>();
+    }
+
+    public Message(String id, String message, String creator, String creatorID, Timestamp dateCreated, ArrayList<String> likes) {
+        this.id = id;
+        this.message = message;
+        this.creator = creator;
+        this.creatorID = creatorID;
+        this.dateCreated = dateCreated;
+        this.likes = likes;
     }
 
     public Timestamp getDateCreated() {
@@ -44,7 +56,7 @@ public class Message {
         this.creatorID = creatorID;
     }
 
-    public int getLikes() {
+    public ArrayList<String> getLikes() {
         return likes;
     }
 
@@ -60,7 +72,7 @@ public class Message {
         this.creator = creator;
     }
 
-    public void setLikes(int numLikes) {
+    public void setLikes(ArrayList<String> numLikes) {
         this.likes = numLikes;
     }
 

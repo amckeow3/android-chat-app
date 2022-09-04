@@ -151,7 +151,7 @@ public class ViewChatroomFragment extends Fragment {
                     DocumentReference docRef = db.collection("chatrooms")
                             .document(chatroomId)
                             .collection("messages")
-                                    .document();
+                            .document();
 
                     HashMap<String, Object> data = new HashMap<>();
 
@@ -228,6 +228,13 @@ public class ViewChatroomFragment extends Fragment {
                 holder.messageTextview.setText(message.getMessage());
                 holder.posterName.setText(message.getCreator());
                 holder.messageID = message.getId();
+                int likesCount = message.getLikes().size();
+
+                if(likesCount == 1) {
+                    holder.numLikes.setText("1 Like | ");
+                } else {
+                    holder.numLikes.setText(String.valueOf(likesCount) + " Likes | ");
+                }
 
                 if(message.getDateCreated() != null){
                     SimpleDateFormat sdf = new SimpleDateFormat();
@@ -238,7 +245,7 @@ public class ViewChatroomFragment extends Fragment {
                     holder.postDate.setText("N/A");
                 }
 
-                holder.numLikes.setText(Integer.toString(message.getLikes()));
+                //set like button to liked/unliked img
 
                 //adds delete button to user's posted comments only
                 FirebaseUser user = mAuth.getCurrentUser();
@@ -272,6 +279,13 @@ public class ViewChatroomFragment extends Fragment {
                 messageTextview = itemView.findViewById(R.id.textViewChatMessage);
                 deleteButton = itemView.findViewById(R.id.imageViewDeleteButton);
                 likeButton = itemView.findViewById(R.id.imageViewLikeButton);
+
+                likeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //like or unlike post
+                    }
+                });
 
                 deleteButton.setOnClickListener(new View.OnClickListener() {
                     @Override
