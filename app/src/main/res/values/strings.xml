@@ -9,6 +9,8 @@
     <string name="cancel">Cancel</string>
     <string name="no_acct_txt">Don\'t have an account?</string>
     <string name="existing_acct_txt">Already have an account?</string>
+    <string name="forgot_password_txt">Forgot your password?</string>
+    <string name="password_reset_txt">Reset</string>
     <string name="first_name_txt">First Name:</string>
     <string name="last_name_txt">Last Name:</string>
     <string name="logout_txt">Logout</string>
@@ -30,4 +32,5 @@
     <string name="user_details_txt">User Details</string>
     <string name="leave_txt">Leave</string>
     <string name="write_msg_txt">Write your message</string>
+    <string name="one_like_txt">1 Like | </string>
 </resources>

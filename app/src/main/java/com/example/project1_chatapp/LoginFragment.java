@@ -27,7 +27,7 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "login fragment";
     LoginFragment.LoginFragmentListener mListener;
     FragmentLoginBinding binding;
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     public LoginFragment() {
         // Required empty public constructor
@@ -57,7 +57,7 @@ public class LoginFragment extends Fragment {
                 } else if (password.isEmpty()) {
                     Toast.makeText(getActivity().getApplicationContext(), "Password is required", Toast.LENGTH_SHORT).show();
                 } else {
-                    mAuth = FirebaseAuth.getInstance();
+                    //mAuth = FirebaseAuth.getInstance();
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -90,6 +90,20 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 mListener.goToRegistration();
+            }
+        });
+
+        binding.textViewPassReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //mListener.goToRegistration();
+                mAuth.sendPasswordResetEmail(mAuth.getCurrentUser().getEmail())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                            }
+                        });
             }
         });
 

@@ -160,15 +160,24 @@ public class ViewChatroomFragment extends Fragment {
                     data.put("dateCreated", FieldValue.serverTimestamp());
                     data.put("creator", user.getDisplayName());
                     data.put("creatorID", user.getUid());
-                    data.put("likes", 0);
+                    data.put("likes", new ArrayList<String>());
 
                     docRef.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-
+                                Toast.makeText(getActivity(), "Chatroom created!", Toast.LENGTH_SHORT).show();
                             } else {
+                                AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+                                b.setTitle("Error creating chatroom")
+                                        .setMessage(task.getException().getMessage())
+                                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
 
+                                            }
+                                        });
+                                b.create().show();
                             }
                         }
                     });
@@ -228,10 +237,11 @@ public class ViewChatroomFragment extends Fragment {
                 holder.messageTextview.setText(message.getMessage());
                 holder.posterName.setText(message.getCreator());
                 holder.messageID = message.getId();
+                holder.likes = message.getLikes();
                 int likesCount = message.getLikes().size();
 
                 if(likesCount == 1) {
-                    holder.numLikes.setText("1 Like | ");
+                    holder.numLikes.setText(R.string.one_like_txt);
                 } else {
                     holder.numLikes.setText(String.valueOf(likesCount) + " Likes | ");
                 }
@@ -242,10 +252,8 @@ public class ViewChatroomFragment extends Fragment {
 
                     holder.postDate.setText(dateStr);
                 } else {
-                    holder.postDate.setText("N/A");
+                    holder.postDate.setText("Loading...");
                 }
-
-                //set like button to liked/unliked img
 
                 //adds delete button to user's posted comments only
                 FirebaseUser user = mAuth.getCurrentUser();
@@ -257,6 +265,14 @@ public class ViewChatroomFragment extends Fragment {
                 } else {
                     holder.deleteButton.setClickable(false);
                     holder.deleteButton.setVisibility(View.INVISIBLE);
+                }
+
+                //set like button to liked/unliked img
+                ArrayList<String> listOfUserLikes = message.getLikes();
+                if(listOfUserLikes.contains(user.getUid())){
+                    holder.likeButton.setImageResource(R.drawable.like_favorite);
+                } else {
+                    holder.likeButton.setImageResource(R.drawable.like_not_favorite);
                 }
             }
         }
@@ -270,6 +286,7 @@ public class ViewChatroomFragment extends Fragment {
             TextView posterName, postDate, numLikes, messageTextview;
             ImageView deleteButton, likeButton;
             String messageID;
+            ArrayList<String> likes;
 
             public ViewChatroomViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -280,10 +297,21 @@ public class ViewChatroomFragment extends Fragment {
                 deleteButton = itemView.findViewById(R.id.imageViewDeleteButton);
                 likeButton = itemView.findViewById(R.id.imageViewLikeButton);
 
+                String userID = mAuth.getCurrentUser().getUid();
+
                 likeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //like or unlike post
+                        if(likes.contains(userID)) {
+                            db.collection("chatrooms").document(chatroomId)
+                                    .collection("messages").document(messageID)
+                                    .update("likes", FieldValue.arrayRemove(userID));
+                        } else {
+                            db.collection("chatrooms").document(chatroomId)
+                                    .collection("messages").document(messageID)
+                                    .update("likes", FieldValue.arrayUnion(userID));
+                        }
                     }
                 });
 

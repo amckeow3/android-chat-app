@@ -5,8 +5,9 @@
       <map>
         <entry key="..\:/Users/Kristin/Documents/GitHub/android-chat-app/app/src/main/res/drawable/ic_person.xml" value="0.2595" />
         <entry key="..\:/Users/Kristin/Documents/GitHub/android-chat-app/app/src/main/res/layout/chatroom_line_item.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Kristin/Documents/GitHub/android-chat-app/app/src/main/res/layout/fragment_login.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Kristin/Documents/GitHub/android-chat-app/app/src/main/res/layout/fragment_view_chatroom.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Kristin/Documents/GitHub/android-chat-app/app/src/main/res/layout/message_line_item.xml" value="0.25052083333333336" />
+        <entry key="..\:/Users/Kristin/Documents/GitHub/android-chat-app/app/src/main/res/layout/message_line_item.xml" value="0.4" />
         <entry key="..\:/Users/adria/AndroidStudioProjects/Project1_ChatApp/app/src/main/res/drawable/ic_add.xml" value="0.1135" />
         <entry key="..\:/Users/adria/AndroidStudioProjects/Project1_ChatApp/app/src/main/res/drawable/ic_chat.xml" value="0.294" />
         <entry key="..\:/Users/adria/AndroidStudioProjects/Project1_ChatApp/app/src/main/res/drawable/ic_logout.xml" value="0.1335" />
