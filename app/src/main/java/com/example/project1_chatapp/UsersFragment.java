@@ -1,6 +1,7 @@
 package com.example.project1_chatapp;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,13 +15,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.example.project1_chatapp.databinding.FragmentUsersBinding;
 import com.example.project1_chatapp.databinding.UserLineItemBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -33,6 +41,8 @@ public class UsersFragment extends Fragment {
     UsersListAdapter usersListAdapter;
     LinearLayoutManager linearLayoutManager;
     RecyclerView recyclerView;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private void setupUI() {
         getUsersData();
@@ -58,17 +68,7 @@ public class UsersFragment extends Fragment {
                             users.add(user);
                         }
                         Log.d(TAG, "Users Array Items ---------> " + users);
-                        /*requireActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                recyclerView = binding.recyclerViewUsers;
-                                recyclerView.setHasFixedSize(false);
-                                linearLayoutManager = new LinearLayoutManager(getContext());
-                                recyclerView.setLayoutManager(linearLayoutManager);
-                                usersListAdapter = new UsersListAdapter(users);
-                                recyclerView.setAdapter(usersListAdapter);
-                            }
-                        });*/
+
                         usersListAdapter.notifyDataSetChanged();
                     }
                 });
@@ -117,6 +117,22 @@ public class UsersFragment extends Fragment {
                 mBinding.textViewUserFullName.setText(firstName + " " + lastName);
                 mBinding.textViewUserCity.setText(mUser.getCity());
                 mBinding.textViewUserGender.setText(mUser.getGender());
+
+                StorageReference profilePic = storage.getReference().child("images/").child(user.getId());
+                if(profilePic != null){
+                    profilePic.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if(task.isSuccessful()){
+                                Glide.with(getActivity())
+                                        .load(task.getResult())
+                                        .into(mBinding.imageViewAcctProfilePic);
+                            }
+                        }
+                    });
+                } else {
+                    mBinding.imageViewAcctProfilePic.setImageResource(R.drawable.ic_person);
+                }
 
                 itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
