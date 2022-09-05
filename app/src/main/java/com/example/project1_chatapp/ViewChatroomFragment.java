@@ -1,6 +1,7 @@
 package com.example.project1_chatapp;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,6 +9,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,6 +41,8 @@ import android.widget.Toast;
 import com.example.project1_chatapp.databinding.FragmentChatroomBinding;
 import com.example.project1_chatapp.databinding.FragmentViewChatroomBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.w3c.dom.Text;
 
@@ -246,6 +251,23 @@ public class ViewChatroomFragment extends Fragment {
                     holder.numLikes.setText(String.valueOf(likesCount) + " Likes | ");
                 }
 
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference profilePic = storage.getReference().child("images/").child(message.getCreatorID());
+                if(profilePic != null){
+                    profilePic.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if(task.isSuccessful()){
+                                Glide.with(getActivity())
+                                        .load(task.getResult())
+                                        .into(holder.profilePicture);
+                            }
+                        }
+                    });
+                } else {
+                    holder.profilePicture.setImageResource(R.drawable.ic_person);
+                }
+
                 if(message.getDateCreated() != null){
                     SimpleDateFormat sdf = new SimpleDateFormat();
                     String dateStr = sdf.format(message.getDateCreated().toDate());
@@ -284,7 +306,7 @@ public class ViewChatroomFragment extends Fragment {
 
         class ViewChatroomViewHolder extends RecyclerView.ViewHolder {
             TextView posterName, postDate, numLikes, messageTextview;
-            ImageView deleteButton, likeButton;
+            ImageView deleteButton, likeButton, profilePicture;
             String messageID;
             ArrayList<String> likes;
 
@@ -294,6 +316,7 @@ public class ViewChatroomFragment extends Fragment {
                 postDate = itemView.findViewById(R.id.textViewPostDate);
                 numLikes = itemView.findViewById(R.id.textViewChatNumLikes);
                 messageTextview = itemView.findViewById(R.id.textViewChatMessage);
+                profilePicture = itemView.findViewById(R.id.imageViewAcctProfilePic);
                 deleteButton = itemView.findViewById(R.id.imageViewDeleteButton);
                 likeButton = itemView.findViewById(R.id.imageViewLikeButton);
 
