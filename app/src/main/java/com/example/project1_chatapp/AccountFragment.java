@@ -23,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.project1_chatapp.databinding.FragmentAccountBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,8 +46,9 @@ public class AccountFragment extends Fragment {
     private static final String TAG = "account fragment";
     AccountFragment.AccountFragmentListener mListener;
     FragmentAccountBinding binding;
-    private FirebaseAuth mAuth;
-    FirebaseStorage storage;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    FirebaseUser user = mAuth.getCurrentUser();
 
     private void setupUI() {
         getUserAccountInfo();
@@ -107,9 +109,8 @@ public class AccountFragment extends Fragment {
 
     private void updateUserProfile() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        //mAuth = FirebaseAuth.getInstance();
 
-        FirebaseUser user = mAuth.getCurrentUser();
         String id = user.getUid();
         String firstName = binding.editTextAcctFirstName.getText().toString();
         String lastName = binding.editTextAcctLastName.getText().toString();
@@ -135,7 +136,8 @@ public class AccountFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d(TAG, "User account was successfully updated!");
+                        Toast.makeText(getActivity(), "User account was successfully updated!", Toast.LENGTH_SHORT).show();
+                        //Log.d(TAG, "User account was successfully updated!");
                         Log.d(TAG, "onSuccess: " + updatedUser);
                         mListener.goToChatrooms();
                     }
@@ -150,10 +152,6 @@ public class AccountFragment extends Fragment {
     }
 
     public void updateProfilePicture(Uri imageURI) {
-        binding.imageViewAcctProfilePic.setImageURI(imageURI);
-
-        //storage/emulated/0/Download/yourImage.jpg
-        FirebaseUser user = mAuth.getCurrentUser();
         StorageReference storageReference = storage.getReference();
         StorageReference profileImgRef = storageReference.child("images/" + user.getUid());
         UploadTask uploadTask = profileImgRef.putFile(imageURI);
@@ -164,8 +162,20 @@ public class AccountFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                .setPhotoUri(uri)
+                                .setPhotoUri(imageURI)
                                 .build();
+                        user.updateProfile(profileUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Log.d("qq", "new profile pic" + user.getPhotoUrl().toString());
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("qq", "update failed" + e.getMessage());
+                            }
+                        });
+                        binding.imageViewAcctProfilePic.setImageURI(imageURI);
                     }
                 });
             }
@@ -199,21 +209,25 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Profile");
-        storage = FirebaseStorage.getInstance();
+        //storage = FirebaseStorage.getInstance();
 
         getUserAccountInfo();
+
+        StorageReference profilePic = storage.getReference().child("images/" + user.getUid());
+        Log.d("qq", "onViewCreated: " + profilePic.toString());
+        if(profilePic != null){
+            profilePic.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    binding.imageViewAcctProfilePic.setImageURI(uri);
+                }
+            });
+        }
 
         binding.buttonChangeProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*//storage/emulated/0/Download/yourImage.jpg
-                FirebaseUser user = mAuth.getCurrentUser();
-                StorageReference storageReference = storage.getReference();
-                StorageReference profileImgRef = storageReference.child("images/" + user.getUid());*/
-
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                //Intent intent = new Intent(Intent.ACTION_PICK);
-                //intent.setType("image/*");
                 startForResult.launch(intent);
             }
         });
@@ -224,17 +238,6 @@ public class AccountFragment extends Fragment {
                 updateUserProfile();
             }
         });
-    }
-
-    // onActivityResult() handles callbacks from the photo picker.
-    @Override
-    public void onActivityResult(
-            int requestCode, int resultCode, final Intent data) {
-
-        if (resultCode == getActivity().RESULT_OK && data != null) {
-            Uri selectedImage = data.getData();
-            binding.imageViewAcctProfilePic.setImageURI(selectedImage);
-        }
     }
 
     @Override
