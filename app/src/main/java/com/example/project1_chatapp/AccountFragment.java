@@ -25,9 +25,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.project1_chatapp.databinding.FragmentAccountBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -209,20 +212,33 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Profile");
-        //storage = FirebaseStorage.getInstance();
 
         getUserAccountInfo();
 
-        StorageReference profilePic = storage.getReference().child("images/" + user.getUid());
-        Log.d("qq", "onViewCreated: " + profilePic.toString());
+        StorageReference profilePic = storage.getReference().child("images/").child(user.getUid());
+        profilePic.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if(task.isSuccessful()){
+                    Glide.with(getActivity())
+                            .load(task.getResult())
+                            .into(binding.imageViewAcctProfilePic);
+                }
+            }
+        });
+
+
+       /* Log.d("qq", "onViewCreated: " + profilePic.toString());
         if(profilePic != null){
             profilePic.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    binding.imageViewAcctProfilePic.setImageURI(uri);
+                    Log.d("qq", "url onSuccess: " + uri.toString());
+                    String url = uri.toString();
+
                 }
             });
-        }
+        }*/
 
         binding.buttonChangeProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
