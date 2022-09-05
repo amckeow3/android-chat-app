@@ -1,6 +1,7 @@
 package com.example.project1_chatapp;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,13 +12,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class UserDetailsFragment extends Fragment {
 
@@ -61,6 +68,7 @@ public class UserDetailsFragment extends Fragment {
 
     Button backButton;
     TextView userFirstName, userLastName, userCity, userGender;
+    ImageView profilePicImageView;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -71,6 +79,7 @@ public class UserDetailsFragment extends Fragment {
         userLastName = view.findViewById(R.id.textViewUserDetailsLastName);
         userCity = view.findViewById(R.id.textViewUserDetailsCity);
         userGender = view.findViewById(R.id.textViewUserDetailsGender);
+        profilePicImageView = view.findViewById(R.id.imageViewAcctProfilePic);
 
         backButton = view.findViewById(R.id.buttonUserDetailsBack);
 
@@ -93,6 +102,24 @@ public class UserDetailsFragment extends Fragment {
                         userGender.setText(gender);
                     }
                 });
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        StorageReference profilePic = storage.getReference().child("images/").child(userID);
+        if(profilePic != null){
+            profilePic.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+                        Glide.with(getActivity())
+                                .load(task.getResult())
+                                .into(profilePicImageView);
+                    }
+                }
+            });
+        } else {
+            profilePicImageView.setImageResource(R.drawable.ic_person);
+        }
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
