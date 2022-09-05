@@ -216,29 +216,21 @@ public class AccountFragment extends Fragment {
         getUserAccountInfo();
 
         StorageReference profilePic = storage.getReference().child("images/").child(user.getUid());
-        profilePic.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if(task.isSuccessful()){
-                    Glide.with(getActivity())
-                            .load(task.getResult())
-                            .into(binding.imageViewAcctProfilePic);
-                }
-            }
-        });
-
-
-       /* Log.d("qq", "onViewCreated: " + profilePic.toString());
         if(profilePic != null){
-            profilePic.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            profilePic.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
-                public void onSuccess(Uri uri) {
-                    Log.d("qq", "url onSuccess: " + uri.toString());
-                    String url = uri.toString();
-
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+                        Glide.with(getActivity())
+                                .load(task.getResult())
+                                .into(binding.imageViewAcctProfilePic);
+                    }
                 }
             });
-        }*/
+        } else {
+            binding.imageViewAcctProfilePic.setImageResource(R.drawable.ic_person);
+        }
+
 
         binding.buttonChangeProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
