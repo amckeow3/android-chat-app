@@ -1,12 +1,14 @@
 package com.example.project1_chatapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +38,7 @@ public class AccountFragment extends Fragment {
     AccountFragment.AccountFragmentListener mListener;
     FragmentAccountBinding binding;
     private FirebaseAuth mAuth;
+    FirebaseStorage storage;
 
     private void setupUI() {
         getUserAccountInfo();
@@ -135,7 +140,7 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAccountBinding.inflate(inflater, container, false);
-        setupUI();
+        //setupUI();
         return binding.getRoot();
     }
 
@@ -143,6 +148,27 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Profile");
+        storage = FirebaseStorage.getInstance();
+
+        getUserAccountInfo();
+
+        binding.buttonChangeProfilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //storage/emulated/0/Download/yourImage.jpg
+                FirebaseUser user = mAuth.getCurrentUser();
+                StorageReference storageReference = storage.getReference();
+                StorageReference profileImgRef = storageReference.child("images/" + user.getUid());
+
+            }
+        });
+
+        binding.buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateUserProfile();
+            }
+        });
     }
 
     @Override
