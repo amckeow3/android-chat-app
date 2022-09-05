@@ -57,7 +57,6 @@ public class LoginFragment extends Fragment {
                 } else if (password.isEmpty()) {
                     Toast.makeText(getActivity().getApplicationContext(), "Password is required", Toast.LENGTH_SHORT).show();
                 } else {
-                    //mAuth = FirebaseAuth.getInstance();
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                                 @Override

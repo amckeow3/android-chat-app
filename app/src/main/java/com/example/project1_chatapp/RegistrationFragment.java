@@ -35,7 +35,6 @@ public class RegistrationFragment extends Fragment {
     RegistrationFragment.RegistrationFragmentListener mListener;
     FragmentRegistrationBinding binding;
     private FirebaseAuth mAuth;
-    String selectedGender;
 
     public RegistrationFragment() {
         // Required empty public constructor

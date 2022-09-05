@@ -72,18 +72,6 @@ public class ViewChatroomFragment extends Fragment {
     ViewChatroomRecyclerViewAdapter adapter;
     ArrayList<Message> messageList;
 
-    private void setupUI() {
-        getActivity().setTitle(chatroomName);
-
-        binding.buttonSendMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //sendMessage();
-                //binding.editTextMessage.setText("");
-                Log.d("qq", "send button pressed");
-            }
-        });
-    }
 
     public ViewChatroomFragment() {
         // Required empty public constructor
@@ -111,7 +99,7 @@ public class ViewChatroomFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentViewChatroomBinding.inflate(inflater, container, false);
-        setupUI();
+        getActivity().setTitle(chatroomName);
         return binding.getRoot();
     }
 
@@ -207,7 +195,7 @@ public class ViewChatroomFragment extends Fragment {
                             Message m = doc.toObject(Message.class);
                             messageList.add(m);
                         }
-                        //Log.d("qq", "messageList is: " + messageList.size());
+
                         adapter.notifyDataSetChanged();
                     }
                 });

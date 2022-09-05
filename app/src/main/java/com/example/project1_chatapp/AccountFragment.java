@@ -112,7 +112,6 @@ public class AccountFragment extends Fragment {
 
     private void updateUserProfile() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        //mAuth = FirebaseAuth.getInstance();
 
         String id = user.getUid();
         String firstName = binding.editTextAcctFirstName.getText().toString();
@@ -140,7 +139,7 @@ public class AccountFragment extends Fragment {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(getActivity(), "User account was successfully updated!", Toast.LENGTH_SHORT).show();
-                        //Log.d(TAG, "User account was successfully updated!");
+                        Log.d(TAG, "User account was successfully updated!");
                         Log.d(TAG, "onSuccess: " + updatedUser);
                         mListener.goToChatrooms();
                     }
@@ -158,34 +157,29 @@ public class AccountFragment extends Fragment {
         StorageReference storageReference = storage.getReference();
         StorageReference profileImgRef = storageReference.child("images/" + user.getUid());
         UploadTask uploadTask = profileImgRef.putFile(imageURI);
-        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                profileImgRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                profileImgRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
-                    public void onSuccess(Uri uri) {
-                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                                .setPhotoUri(imageURI)
-                                .build();
-                        user.updateProfile(profileUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d("qq", "new profile pic" + user.getPhotoUrl().toString());
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("qq", "update failed" + e.getMessage());
-                            }
-                        });
-                        binding.imageViewAcctProfilePic.setImageURI(imageURI);
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if(task.isSuccessful()){
+                            UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                                    .setPhotoUri(task.getResult())
+                                    .build();
+                            user.updateProfile(profileUpdate).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Log.d(TAG, "Profile picture updated");
+                                }
+                            });
+
+                            Glide.with(getActivity())
+                                    .load(task.getResult())
+                                    .into(binding.imageViewAcctProfilePic);
+                        }
                     }
                 });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
             }
         });
     }
@@ -204,7 +198,7 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAccountBinding.inflate(inflater, container, false);
-        //setupUI();
+        setupUI();
         return binding.getRoot();
     }
 
@@ -212,8 +206,6 @@ public class AccountFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle("Profile");
-
-        getUserAccountInfo();
 
         StorageReference profilePic = storage.getReference().child("images/").child(user.getUid());
         if(profilePic != null){
@@ -237,13 +229,6 @@ public class AccountFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startForResult.launch(intent);
-            }
-        });
-
-        binding.buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateUserProfile();
             }
         });
     }
