@@ -16,9 +16,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,29 +26,23 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.messaging.FirebaseMessaging;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.project1_chatapp.databinding.FragmentChatroomBinding;
 import com.example.project1_chatapp.databinding.FragmentViewChatroomBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 public class ViewChatroomFragment extends Fragment {
@@ -216,6 +210,29 @@ public class ViewChatroomFragment extends Fragment {
                 }
             }
         });
+
+        //leaveButton = view.findViewById(R.id.buttonLeave);
+        binding.buttonLeave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Query query = db.collection("chatrooms").document(chatroomId)
+                        .collection("members")
+                        .whereEqualTo("userID", user.getUid());
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(DocumentSnapshot doc : task.getResult()) {
+                                db.collection("chatrooms").document(chatroomId)
+                                        .collection("members")
+                                        .document(doc.getId()).delete();
+                            }
+                            mListener.leaveChatroom();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     void getChatroomMembers() {
@@ -234,7 +251,7 @@ public class ViewChatroomFragment extends Fragment {
                             membersList.add(viewer);
                         }
 
-                        adapter.notifyDataSetChanged();
+                        membersAdapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -477,6 +494,6 @@ public class ViewChatroomFragment extends Fragment {
     }
 
     public interface ViewChatroomFragmentListener {
-
+        void leaveChatroom();
     }
 }

@@ -152,4 +152,9 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Log
                 .addToBackStack(null)
                 .commit();
     }
+
+    @Override
+    public void leaveChatroom() {
+        getSupportFragmentManager().popBackStack();
+    }
 }
