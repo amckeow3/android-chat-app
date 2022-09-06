@@ -12,7 +12,13 @@ public class User {
     ArrayList<Chatroom> userChatrooms = new ArrayList<>();
 
     public User() {
-
+        this.id = "asdf";
+        this.firstName = "firstName";
+        this.lastName = "lastName";
+        this.email = "email";
+        this.city = "city";
+        this.gender = "gender";
+        this.userChatrooms = new ArrayList<>();
     }
 
     public User(String id, String firstName, String lastName, String email, String city, String gender, ArrayList<Chatroom> userChatrooms) {

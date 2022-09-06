@@ -65,13 +65,13 @@ public class ViewChatroomFragment extends Fragment {
     String chatroomId;
     Button leaveButton;
     FloatingActionButton sendButton;
-    TextView chatroomTitle, numViewers;
-    int viewerCount;
-    RecyclerView recyclerView;
-    LinearLayoutManager linearLayoutManager;
+    RecyclerView recyclerView, viewersRecyclerView;
+    LinearLayoutManager linearLayoutManager, linearLayoutManager2;
     ViewChatroomRecyclerViewAdapter adapter;
-    ArrayList<Message> messageList;
+    ChatViewersRecyclerViewAdapter membersAdapter;
 
+    ArrayList<Message> messageList;
+    ArrayList<User> membersList;
 
     public ViewChatroomFragment() {
         // Required empty public constructor
@@ -109,6 +109,7 @@ public class ViewChatroomFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
 
         messageList = new ArrayList<>();
         recyclerView = binding.messagesRecyclerView;
@@ -118,6 +119,43 @@ public class ViewChatroomFragment extends Fragment {
         adapter = new ViewChatroomRecyclerViewAdapter(messageList);
         recyclerView.setAdapter(adapter);
         getMessages();
+
+        membersList = new ArrayList<>();
+        viewersRecyclerView = binding.viewersRecyclerView;
+        viewersRecyclerView.setHasFixedSize(false);
+        linearLayoutManager2 = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        viewersRecyclerView.setLayoutManager(linearLayoutManager2);
+        membersAdapter = new ChatViewersRecyclerViewAdapter(membersList);
+        viewersRecyclerView.setAdapter(membersAdapter);
+
+        DocumentReference docRef = db.collection("chatrooms").document(chatroomId)
+                .collection("members").document();
+
+        HashMap<String, String> newMember = new HashMap<>();
+        newMember.put("name", user.getDisplayName());
+        newMember.put("userID", user.getUid());
+
+        docRef.set(newMember).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Log.d(TAG, "Joined chatroom " + chatroomName);
+                } else {
+                    AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+                    b.setTitle("Error")
+                            .setMessage(task.getException().getMessage())
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                }
+                            });
+                    b.create().show();
+                }
+            }
+        });
+
+        getChatroomMembers();
 
         sendButton = view.findViewById(R.id.buttonSendMessage);
 
@@ -139,8 +177,6 @@ public class ViewChatroomFragment extends Fragment {
                             });
                     b.create().show();
                 } else {
-                    FirebaseUser user = mAuth.getCurrentUser();
-
                     DocumentReference docRef = db.collection("chatrooms")
                             .document(chatroomId)
                             .collection("messages")
@@ -180,6 +216,27 @@ public class ViewChatroomFragment extends Fragment {
                 }
             }
         });
+    }
+
+    void getChatroomMembers() {
+        db.collection("chatrooms").document(chatroomId)
+                .collection("members")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        membersList.clear();
+
+                        for (QueryDocumentSnapshot doc : value) {
+                            User viewer = new User();
+                            viewer.id = doc.getString("userID");
+                            viewer.firstName = doc.getString("name");
+
+                            membersList.add(viewer);
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+                });
     }
 
     void getMessages() {
@@ -355,6 +412,66 @@ public class ViewChatroomFragment extends Fragment {
                                 });
                     }
                 });
+            }
+        }
+    }
+
+    class ChatViewersRecyclerViewAdapter extends RecyclerView.Adapter<ChatViewersRecyclerViewAdapter.ChatViewersViewHolder> {
+        ArrayList<User> membersArrayList;
+
+        public ChatViewersRecyclerViewAdapter(ArrayList<User> members) {
+            this.membersArrayList = members;
+        }
+
+        @NonNull
+        @Override
+        public ChatViewersRecyclerViewAdapter.ChatViewersViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewer_line_item, parent, false);
+            ChatViewersRecyclerViewAdapter.ChatViewersViewHolder viewersViewHolder = new ChatViewersRecyclerViewAdapter.ChatViewersViewHolder(view);
+
+            return viewersViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ChatViewersRecyclerViewAdapter.ChatViewersViewHolder holder, int position) {
+            if(membersArrayList.size() != 0) {
+                User viewer = membersArrayList.get(position);
+                holder.name.setText(viewer.firstName);
+
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference profilePic = storage.getReference().child("images/").child(viewer.getId());
+                if(profilePic != null){
+                    profilePic.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if(task.isSuccessful()){
+                                Glide.with(getActivity())
+                                        .load(task.getResult())
+                                        .into(holder.profile);
+                            }
+                        }
+                    });
+                } else {
+                    holder.profile.setImageResource(R.drawable.ic_person);
+                }
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return membersArrayList.size();
+        }
+
+        class ChatViewersViewHolder extends RecyclerView.ViewHolder {
+            TextView name;
+            ImageView profile;
+
+            public ChatViewersViewHolder(@NonNull View itemView) {
+                super(itemView);
+                name = itemView.findViewById(R.id.textViewerName);
+                profile = itemView.findViewById(R.id.imageViewAcctProfilePic);
+
+
             }
         }
     }
