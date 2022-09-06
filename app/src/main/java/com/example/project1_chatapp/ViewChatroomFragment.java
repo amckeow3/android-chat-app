@@ -189,10 +189,10 @@ public class ViewChatroomFragment extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                Toast.makeText(getActivity(), "Chatroom created!", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "Message successfully posted!");
                             } else {
                                 AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
-                                b.setTitle("Error creating chatroom")
+                                b.setTitle("Error creating message")
                                         .setMessage(task.getException().getMessage())
                                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                             @Override

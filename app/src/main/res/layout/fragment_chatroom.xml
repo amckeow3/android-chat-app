@@ -82,6 +82,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayoutChatroomOptions" />
+        app:layout_constraintTop_toBottomOf="@+id/tabLayoutChatroomOptions"
+        tools:listitem="@layout/chatroom_line_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
